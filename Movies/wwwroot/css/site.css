@@ -5,7 +5,7 @@ for details on configuring this project to bundle and minify static web assets. 
 .movie-entry{
     margin: 5px;
     padding-bottom: 10px;
-    border-bottom: 1px dashed red;
+    border-bottom: 1px dashed purple;
 }
 
 .movie-entry h4 {
@@ -19,8 +19,8 @@ for details on configuring this project to bundle and minify static web assets. 
    
 }
  .movie-entry .ratings > div {
-        border: 30px solid green;
-        background: #800020;
+        border: 1px solid purple;
+        background: gray;
         text-align: center;
         width: 100px;
     }
@@ -32,7 +32,7 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 form{
-    background-color: darkgreen;
+    background-color: gray;
     padding: 20px;
     width: 400px;
 

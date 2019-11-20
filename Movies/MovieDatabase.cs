@@ -8,65 +8,78 @@ namespace Movies
     /// <summary>
     /// A class representing a database of movies
     /// </summary>
-    public class MovieDatabase
+    public static class MovieDatabase
     {
-        private List<Movie> movies = new List<Movie>();
-
-        /// <summary>
-        /// Loads the movie database from the JSON file
-        /// </summary>
-        public MovieDatabase()
-        {
-
-            using (StreamReader file = System.IO.File.OpenText("movies.json"))
+        private static List<Movie> movies;
+        
+        public  static List<Movie> All {
+            get
             {
-                string json = file.ReadToEnd();
-                movies = JsonConvert.DeserializeObject<List<Movie>>(json);
-            }
-        }
+                if(movies == null)
+                {
+                    using (StreamReader file = System.IO.File.OpenText("movies.json"))
+                    {
+                        string json = file.ReadToEnd();
+                        movies = JsonConvert.DeserializeObject<List<Movie>>(json);
+                    }
+                }
+                
 
-        public List<Movie> All { get { return movies; } }
+                return movies; } }
 
-        public List<Movie> SearchAndFilter(string searchString, List<string> rating)
+        public static List<Movie> SearchAndFilter(List<Movie> movies,string term)
         {
-            if (searchString == null && rating.Count == 0) return All;
-
-
+            
             List<Movie> results = new List<Movie>();
             foreach (Movie movie in movies)
             {
 
-                // Case 1: Search string AND ratings
-                if (searchString != null && rating.Count > 0)
-                {
-                    
-                    if(movie.Title != null && movie.Title.Contains(searchString, StringComparison.InvariantCultureIgnoreCase) && rating.Contains(movie.MPAA_Rating))
+              if(movie.Title.Contains(term, StringComparison.OrdinalIgnoreCase))
                     {
                         results.Add(movie);
                     }
 
-                }
-                // Case 2: Sreach strings only
-                else if (searchString != null)
-                {
-                    if (movie.Title != null && movie.Title.Contains(searchString, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        results.Add(movie);
-                    }
-                }
-
-                // Case 3: Search rating only
-                else if (rating.Count > 0)
-                {
-                    if(rating.Contains(movie.MPAA_Rating))
-                    {
-                        results.Add(movie);
-                    }
-
-                }
+                
             }
             return results;
 
         }
+        public static List<Movie> FilterByMPAA(List<Movie> movies, List<string> mpaa)
+        {
+            List<Movie> results = new List<Movie>();
+            foreach(Movie movie in movies)
+            {
+                if (mpaa.Contains(movie.MPAA_Rating))
+                {
+                    results.Add(movie);
+                }
+            }
+            return results;
+        }
+        public static List<Movie> FilterByMinMPAA(List<Movie> movies, float minIMDB)
+        {
+            List<Movie> results = new List<Movie>();
+            foreach (Movie movie in movies)
+            {
+                if (movie.IMDB_Rating != null && minIMDB <= movie.IMDB_Rating )
+                {
+                    results.Add(movie);
+                }
+            }
+            return results;
+        }
+        public static  List<Movie> FilterByMaxMPAA(List<Movie> movies, float minIMDB)
+        {
+            List<Movie> results = new List<Movie>();
+            foreach (Movie movie in movies)
+            {
+                if (movie.IMDB_Rating != null && minIMDB >= movie.IMDB_Rating)
+                {
+                    results.Add(movie);
+                }
+            }
+            return results;
+        }
+
     }
 }
